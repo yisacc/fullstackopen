@@ -10,6 +10,10 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
   const [searchShow, setSearchShow] = useState(false);
+  const [successMessage,setSuccessMessage]=useState('')
+  const [errorMessage,setErrorMessage]=useState('')
+
+
   const userExists = () => persons.some((el) => el.name.toLowerCase() === newName.toLowerCase());
   useEffect(()=>{
   personService.getAll().then(initialPersons=>{setPersons(initialPersons)})
@@ -35,6 +39,7 @@ const addPerson=(event)=>{
     }
   }else{
     setPersons(persons.concat(newPerson))
+    setSuccessMessage(`Added ${newPerson.name}`)
   }
   setNewName('')
   setNewNumber('')
@@ -56,12 +61,29 @@ const handleDelete=(id)=>{
   const deletedPerson=persons.find(person=>person.id===id)
   const text=`Delete ${deletedPerson.name}`
   if(window.confirm(text)===true){
-    personService.remove(id).then(setPersons(persons.filter(person=>person.id!==id)))
+    personService.remove(id)
+    .then(setPersons(persons.filter(person=>person.id!==id)))
+    .catch(err=>setErrorMessage(`Information of ${deletedPerson.name} has already been removed from the server`))
   }
 }
   return (
     <div>
       <h2>Phonebook</h2>
+      {successMessage&&
+      <div 
+      style={{borderColor:'green',background:'#E7E9EB',marginLeft:'3%',borderWidth:'2px', borderStyle:'solid',borderRadius:10}}>
+        <h4 style={{color:"green",padding:'1px'}}>
+          {successMessage}
+          </h4>
+          </div>}
+
+          {errorMessage&&
+      <div 
+      style={{borderColor:'red',background:'#E7E9EB',marginLeft:'3%',borderWidth:'2px', borderStyle:'solid',borderRadius:10}}>
+        <h4 style={{color:"red",padding:'1px'}}>
+          {errorMessage}
+          </h4>
+          </div>}    
       <Filter search={search} handleSearch={handleSearch} />
       <PersonForm
       addPerson={addPerson}
