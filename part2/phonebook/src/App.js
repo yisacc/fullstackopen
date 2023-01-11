@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,13 +11,9 @@ const App = () => {
   const [search, setSearch] = useState('')
   const [searchShow, setSearchShow] = useState(false);
   const userExists = () => persons.some((el) => el.name.toLowerCase() === newName.toLowerCase());
-useEffect(()=>{
-axios.get('http://localhost:3001/persons')
-.then((response)=>{
-setPersons(response.data)
-})
-},[])
-
+  useEffect(()=>{
+  personService.getAll().then(initialPersons=>{setPersons(initialPersons)})
+  },[])
   const handleNameChange=(event)=>{
     setNewName(event.target.value)
   }
@@ -31,7 +27,12 @@ const addPerson=(event)=>{
     number: newNumber
   }
   if(userExists()){
-alert(`${newName} is already added to phonebook`)
+    const existingPerson=persons.find(person=>person.name===newName)
+    const text=`${existingPerson.name} is already added to phonebook, replace the old number with the new one`
+    if(window.confirm(text)===true){
+      personService.update(existingPerson.id,newPerson)
+      .then(returnedPerson=>setPersons(persons.map(person=>person.id!==existingPerson.id?person:returnedPerson)))
+    }
   }else{
     setPersons(persons.concat(newPerson))
   }
@@ -50,6 +51,14 @@ const handleSearch=(e)=>{
     setSearchShow(true);
   }
 }
+
+const handleDelete=(id)=>{
+  const deletedPerson=persons.find(person=>person.id===id)
+  const text=`Delete ${deletedPerson.name}`
+  if(window.confirm(text)===true){
+    personService.remove(id).then(setPersons(persons.filter(person=>person.id!==id)))
+  }
+}
   return (
     <div>
       <h2>Phonebook</h2>
@@ -64,7 +73,9 @@ const handleSearch=(e)=>{
       <h2>Numbers</h2>
       <Persons searchShow={searchShow}
       filteredPersons={filteredPersons}
-      persons={persons} />
+      persons={persons}
+      handleDelete={handleDelete}
+      />
     </div>
   )
 }
