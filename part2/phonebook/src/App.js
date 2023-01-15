@@ -38,8 +38,12 @@ const addPerson=(event)=>{
       .then(returnedPerson=>setPersons(persons.map(person=>person.id!==existingPerson.id?person:returnedPerson)))
     }
   }else{
-    setPersons(persons.concat(newPerson))
-    setSuccessMessage(`Added ${newPerson.name}`)
+    personService.add(newPerson)
+    .then(returnedPerson=>{
+      setPersons(persons.concat(returnedPerson))
+      setSuccessMessage(`Added ${newPerson.name}`)
+    })
+   
   }
   setNewName('')
   setNewNumber('')
