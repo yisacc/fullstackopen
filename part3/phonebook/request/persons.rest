@@ -1,7 +1,10 @@
 GET http://localhost:3001/api/persons
 
 ###
-GET http://localhost:3001/api/persons/63c1d449703326fd25765180
+GET http://localhost:3001/api/persons/63c1d46d3ef91296275dd44c
+
+###
+GET http://localhost:3001/info
 
 
 ###
