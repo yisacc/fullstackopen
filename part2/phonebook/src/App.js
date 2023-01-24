@@ -26,6 +26,8 @@ const App = () => {
   }
 const addPerson=(event)=>{
   event.preventDefault();
+  setErrorMessage('')
+  setSuccessMessage('')
   const newPerson={
     name: newName,
     number: newNumber
@@ -43,7 +45,9 @@ const addPerson=(event)=>{
       setPersons(persons.concat(returnedPerson))
       setSuccessMessage(`Added ${newPerson.name}`)
     })
-   
+   .catch(error=>{
+   setErrorMessage(error.response.data.error)
+   })
   }
   setNewName('')
   setNewNumber('')
