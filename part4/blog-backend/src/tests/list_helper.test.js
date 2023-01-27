@@ -49,6 +49,58 @@ const blogs = [
     __v: 0
   }  
 ]
+const authorBlogs=[
+  {
+    author: "Michael Chan",
+    blogs: 7,
+  },
+  {
+    author: "Edsger W. Dijkstra",
+    blogs: 5,
+  },
+  {
+    author: "Edsger W. Dijkstra",
+    blogs: 12,
+  },
+  {
+    author: "Robert C. Martin",
+    blogs: 10,
+  },
+  {
+    author: "Robert C. Martin",
+    blogs: 0,
+  },
+  {
+    author: "Robert C. Martin",
+    blogs: 2,
+  }
+]
+const authorLikes=[
+  {
+    author: "Michael Chan",
+    likes: 7,
+  },
+  {
+    author: "Edsger W. Dijkstra",
+    likes: 5,
+  },
+  {
+    author: "Edsger W. Dijkstra",
+    likes: 12,
+  },
+  {
+    author: "Robert C. Martin",
+    likes: 10,
+  },
+  {
+    author: "Robert C. Martin",
+    likes: 0,
+  },
+  {
+    author: "Robert C. Martin",
+    likes: 2,
+  }
+]
 test('dummy returns one', () => {
   const blogs = []
 
@@ -101,5 +153,33 @@ describe('favorite blog',()=>{
   })
   test('of empty array is empty object', () => {
     expect(listHelper.favoriteBlog([])).toEqual({})
+  })
+})
+describe('most blogs',()=>{
+  test('when list has only one blog, returns that blog', () => {
+    const listWithOneBlog=[{
+      author: "Robert C. Martin",
+      blogs: 3
+    }]
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    expect(result).toBe(listWithOneBlog[0].author)
+  })
+  test('of many is return the right blog',()=>{
+    const result = listHelper.mostBlogs(authorBlogs)
+    expect(result).toBe(authorBlogs[2].author)
+  })
+})
+describe('most likes',()=>{
+  test('when list has only one blog, returns that blog', () => {
+    const listWithOneBlog=[{
+      author: "Edsger W. Dijkstra",
+      likes: 17
+    }]
+    const result = listHelper.mostLikes(listWithOneBlog)
+    expect(result).toEqual(listWithOneBlog[0])
+  })
+  test('of many is return the right blog',()=>{
+    const result = listHelper.mostLikes(authorLikes)
+    expect(result).toBe(authorLikes[2])
   })
 })
